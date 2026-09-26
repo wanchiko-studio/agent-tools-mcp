@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "agent-tools": {
+      "type": "stdio",
+      "command": ".venv/bin/python",
+      "args": [
+        "-m",
+        "agent_tools_mcp"
+      ],
+      "env": {}
+    }
+  }
+}
