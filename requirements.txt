@@ -1,0 +1,8 @@
+# The MCP Python SDK, 2.x line — pinned to the version pip actually installed on 26 Sept 2026.
+#
+# 🔑 NOT 1.x. In 2.0 the decorator server was renamed FastMCP → MCPServer, and the SDK moved its
+# own HTTP layer from `httpx` to `httpx2`. Neither of those HTTP packages is imported by this
+# repo: the server speaks stdio, and the client for rag-service (session 2) brings its own
+# `httpx` so that `MockTransport` can carry the no-network tests. `mcp` is the only runtime
+# dependency session 1 needs, and the only one it declares.
+mcp==2.2.0

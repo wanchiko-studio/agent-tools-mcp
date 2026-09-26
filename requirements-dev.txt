@@ -1,0 +1,9 @@
+# Test-only dependencies. Kept out of requirements.txt so that file stays an honest list of
+# what the code imports at runtime.
+#
+#   pip install -r requirements.txt -r requirements-dev.txt
+#   pytest
+#
+# Async tests run on the anyio pytest plugin, which `mcp` already depends on. No separate
+# async plugin is installed, and none is listed here on purpose.
+pytest==9.1.1
