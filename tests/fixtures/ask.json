@@ -1,0 +1,34 @@
+{
+  "question": "What program was used to establish a model for the simulation of proppant migration?",
+  "mode": "retrieval-only",
+  "top_k": 3,
+  "hits": [
+    {
+      "rank": 1,
+      "score": 0.445513994589781,
+      "citation": "petroleum-science-2022-self-generated-proppant.pdf, стр. 8",
+      "source_file": "petroleum-science-2022-self-generated-proppant.pdf",
+      "page_start": 8,
+      "page_end": 8,
+      "text": "pantsofthesamesizeinfracturingfluidsofvariousviscositieswere relatedtothevelocityfield.Therefore,themotionequationofthe\nevaluated and compared. The experimental scheme is shown in dispersedphaseandNavier-Stokesequationsarecoupledthrough\nTable2. thevelocityfield.\n3.2.2. Simulationofproppantmigration (3) Initialandboundaryconditions\nCOMSOLVersion5.5wasusedtoestablishamodelforsimula-\ntionofproppantmigrationtoevaluatethemigrationcapabilityof ThemodelboundaryfollowsDirichletconditions.Leftandright\ntheself-generatedproppantwithinarealfracture.Thefluidcarries boundariesaretheinletandtheoutlet.Forotherboundaries,there\nthe model's emulsion droplets of different sizes, and momentum\narenoinfloworoutflowforfluidsandparticles.Theentiremodelis\nexchange occurs between the droplets and the fluid. Thus, the filledwithacontinuousphasewhichflowsatinletflowrate.The\ndropletshaveacertainflowrate.Thedropletsalsohaveadown- dispersedphaseiscarriedbythefluidfromtheinletandflowsout\nward acceleration under the action of gravity and viscous resis-\nfromtheoutlet.Theinitialvalueofthevelocityfieldis0.Thekey\ntance.Thedropletsofvarioussizesaresubjecttodifferentgravity boundaryconditionsaremarkedinFig.15."
+    },
+    {
+      "rank": 2,
+      "score": 0.357335208619574,
+      "citation": "petroleum-science-2022-self-generated-proppant.pdf, стр. 9",
+      "source_file": "petroleum-science-2022-self-generated-proppant.pdf",
+      "page_start": 9,
+      "page_end": 9,
+      "text": "25 mPa s, the migration capability of quartz sand proppants was\nimproved. Nevertheless, many quartz sandproppants still settled\nwithinthemajorfractureandcannotbecarriedtofarendfractures.\nWhenthefracturingfluidviscositywas15mPas,theself-generated\nproppant that settled in the near-wellbore area was reduced\nsignificantlyandtheproppantswithsizes>7mesh,7/12meshand\n14/20meshcanbecarriedtofar-endfractures.Whenthefracturing\nfluidviscosityincreasedto25mPas,self-generatedproppantsdid\nnotsettlesignificantly.Thatmeanstheplacementofself-generated\nFig.17. Samplesofself-generatedproppants(a),ceramsite(b)andquartzsand(c). proppants can be adjusted by controlling the fracturing fluid\nviscosity.\nmolecular structure of the obtained epoxy resin has branched\n4.2.2. Simulationresults\nchains.Thebranchedchainschangethestateofmolecularchains\nExperimentalresultsinFig.18are comparedwiththesimula-\nstacking, decreasing the density and viscosity of the epoxy resin\ntion results in Fig. 20. Simulation results are consistent with\n(Groenzinetal.,1999).Theemulsioniseasilygeneratedduetothe\nexperimentalresults,provingthemodelhasgoodaccuracy.Since\n2248"
+    },
+    {
+      "rank": 3,
+      "score": 0.3180019019108546,
+      "citation": "petroleum-science-2022-self-generated-proppant.pdf, стр. 2",
+      "source_file": "petroleum-science-2022-self-generated-proppant.pdf",
+      "page_start": 2,
+      "page_end": 2,
+      "text": "etal., 2008).Therefore,theemulsifiedthermosettingepoxyresin\nwas selected to prepare self-generated proppants in this paper.\nThroughinvestigationandpreliminaryevaluationexperiments,it\nwasfoundthehighviscosityandhighdensityof theepoxyresin\nmakeemulsiondropletspronetoaccumulationduetosettlement\nduringthetransportationprocess.Accumulationcancauseparticle\ndeformation,anddropletsintheaccumulationstateareproneto\ncoalescebetweenparticlesduetotheincreaseofviscosityduring\nthecuringprocess.Thepoortoughnessandnotch-sensitivedefects\nof epoxy resin can also decrease the compressivestrengthof the Fig.1. Reactionformulaofthelow-densityandlow-viscosityepoxyresin.\n2241"
+    }
+  ]
+}

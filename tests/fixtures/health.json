@@ -1,0 +1,6 @@
+{
+  "status": "ok",
+  "mode": "embedded (qdrant_storage)",
+  "collection": "rag_eval_1200",
+  "points": 55
+}
