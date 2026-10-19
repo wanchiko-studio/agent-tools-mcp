@@ -6,3 +6,8 @@
 # `httpx` so that `MockTransport` can carry the no-network tests. `mcp` is the only runtime
 # dependency session 1 needs, and the only one it declares.
 mcp==2.2.0
+
+# The HTTP client for rag-service (session 2). Pinned to what pip installed. Chosen over the
+# SDK's own `httpx2` because `httpx.MockTransport` lets every test run with no server and no
+# network, and rag-service's own tests already use this exact version.
+httpx==0.28.1
