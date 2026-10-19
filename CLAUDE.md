@@ -120,6 +120,32 @@ Three things that are easy to get wrong later:
 
 ## Current state
 
-Session 1 of 4: the skeleton, one `ping` tool, two in-process tests through `Client(mcp)`, and the
-project-scoped registration. `search_documents`, `index_status`, the socket guard, recorded fixtures,
-README and CI are sessions 2 and 3.
+Sessions 1 and 2 of 4 are done. `ping`, and `search_documents` over HTTP with the four outcomes kept
+distinct (hits with a weak-match flag below `WEAK_MATCH = 0.5` · nothing matched is a normal result ·
+empty index is a `ToolError` · service down is a `ToolError` naming the URL and the start command),
+the socket guard, and real `/health` + `/ask` fixtures from `rag_eval_1200`. 14 tests.
+
+## Where session 2 stopped (19 Oct, 11:41 MSK)
+
+**Done-when met.** All four outcome rows are tested and green, and a live headless session answered
+"what program was used to model proppant migration?" with «COMSOL (Version 5.5) … стр. 8» — calling
+`search_documents` and citing the page without being told to. Session 1 was closed the same morning:
+a real `ping` call returned «pong».
+
+Three things learned, for session 3:
+
+1. **Claude Code shows the model the `structured_content`, not the readable text.** The tool result
+   it received was the JSON (`hits`, `score`, `weak_match`), so the Russian notes in the text block
+   are what *other* clients read. The model still acted on `weak_match`. If the README's worked
+   example quotes tool output, quote what Claude Code actually showed.
+2. **The correct passage is itself a weak match.** rag-eval's q9 answer ranks 1st at 0.4455 (0.4310
+   with the agent's reworded query) — below the ~0.5 line. The flag is right to fire; do not move the
+   constant.
+3. **rag-service's embedding model lives in a temp cache that macOS clears.** The first `/ask` after a
+   clear downloads ~0.22 GB, and with `HF_HUB_OFFLINE=1` it fails with a 500 instead. Start the
+   service online the first time.
+
+**Next step, exactly:** session 3 — `index_status` (redact the `mode` path the way
+`tests/fixtures/health.json` already does), then CI on 3.11 + 3.12, then the README with the worked
+example and the "service stopped → the agent says it is down" case. First command:
+`cd "02 — Demos & Builds/30-Day-Build-Plan/agent-tools-mcp" && .venv/bin/python -m pytest`
