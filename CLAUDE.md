@@ -123,7 +123,8 @@ Three things that are easy to get wrong later:
 Sessions 1 and 2 of 4 are done. `ping`, and `search_documents` over HTTP with the four outcomes kept
 distinct (hits with a weak-match flag below `WEAK_MATCH = 0.5` · nothing matched is a normal result ·
 empty index is a `ToolError` · service down is a `ToolError` naming the URL and the start command),
-the socket guard, and real `/health` + `/ask` fixtures from `rag_eval_1200`. 14 tests.
+the socket guard, and real `/health` + `/ask` fixtures from `rag_eval_1200`. Session 3 has
+started: `index_status` is done. 21 tests.
 
 ## Where session 2 stopped (19 Oct, 11:41 MSK)
 
@@ -145,7 +146,22 @@ Three things learned, for session 3:
    clear downloads ~0.22 GB, and with `HF_HUB_OFFLINE=1` it fails with a 500 instead. Start the
    service online the first time.
 
-**Next step, exactly:** session 3 — `index_status` (redact the `mode` path the way
-`tests/fixtures/health.json` already does), then CI on 3.11 + 3.12, then the README with the worked
-example and the "service stopped → the agent says it is down" case. First command:
-`cd "02 — Demos & Builds/30-Day-Build-Plan/agent-tools-mcp" && .venv/bin/python -m pytest`
+**Session 3, 19 Oct 11:55 MSK — `index_status` is done.** It reports store, collection and passage
+count from `/health`; an empty index is a plain report naming `scripts/index_pdf.py`, not an error
+(for this tool it is the answer); refused / timeout / 5xx raise the same `ToolError` as
+`search_documents`, now built by one shared `_service_down()` so the two cannot drift. The store's
+absolute local path is cut to its folder name (`embedded (qdrant_storage)`); a container URL is kept.
+
+**What session 3 still needs, in order:**
+
+1. **CI** — GitHub Actions on 3.11 + 3.12, mirroring `../rag-service/.github/workflows/ci.yml`
+   without its compose step. Bare `pytest`; the socket guard must hold on the runner.
+2. **README** — the problem in the first two lines; a worked example with real output (the Claude
+   Code session, the tool call, the passage, the cited page) **and** the failure case: rag-service
+   stopped → the agent says the service is down instead of inventing an answer.
+3. **Decide the structured-JSON-vs-readable-text finding** (point 1 above): Claude Code passed the
+   model the `structured_content`, not the Russian text block. The README must quote what the model
+   actually saw; whether the text block still earns its place is a decision, not an assumption.
+4. **Clean-clone check** — clone into `/tmp`, follow only the README, `pytest` green.
+
+First command: `cd "02 — Demos & Builds/30-Day-Build-Plan/agent-tools-mcp" && .venv/bin/python -m pytest`
