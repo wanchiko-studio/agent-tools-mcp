@@ -31,10 +31,10 @@ async def client():
 
 
 @pytest.mark.anyio
-async def test_the_server_exposes_ping_and_search_documents(client):
+async def test_the_server_exposes_its_three_tools(client):
     tools = await client.list_tools()
 
-    assert sorted(tool.name for tool in tools.tools) == ["ping", "search_documents"]
+    assert sorted(tool.name for tool in tools.tools) == ["index_status", "ping", "search_documents"]
 
 
 @pytest.mark.anyio

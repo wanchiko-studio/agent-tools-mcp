@@ -57,12 +57,7 @@ def search_documents(question: str, top_k: int = 3) -> CallToolResult:
                 "cd rag-service && .venv/bin/python scripts/index_pdf.py <файл.pdf> --reset"
             )
     except rag_client.ServiceUnavailable as exc:
-        # Raised deliberately as a ToolError: an ordinary exception would reach the agent with its
-        # text withheld, and the agent would improvise an answer as if nothing were wrong.
-        raise ToolError(
-            f"rag-service не отвечает по адресу {exc.url} ({exc.cause}). Ответа из документов нет — "
-            f"не отвечайте по памяти. Запустите сервис: {rag_client.START_COMMAND}"
-        ) from exc
+        raise _service_down(exc) from exc
 
     if not hits:
         text = (
@@ -92,3 +87,59 @@ def _passage(hit: dict) -> dict:
 def _render(hit: dict) -> str:
     note = " — слабое совпадение, может не отвечать на вопрос" if hit["weak_match"] else ""
     return f"#{hit['rank']} · {hit['citation']} · score {hit['score']:.4f}{note}\n{hit['text']}"
+
+
+@mcp.tool()
+def index_status() -> CallToolResult:
+    """Report which store rag-service uses, which collection, and how many passages are indexed.
+
+    Use it when a search returns nothing or something unexpected, to tell an empty index from a
+    question the documents do not cover. It reads no documents and answers no question.
+    """
+    try:
+        body = rag_client.health()
+    except rag_client.ServiceUnavailable as exc:
+        raise _service_down(exc) from exc
+
+    status = {
+        "store": _store(str(body.get("mode", ""))),
+        "collection": body.get("collection"),
+        "points": int(body.get("points", 0)),
+    }
+    text = (
+        f"Хранилище: {status['store']} · коллекция: {status['collection']} · "
+        f"проиндексировано отрывков: {status['points']}."
+    )
+    # Not an error for THIS tool: an empty index is exactly what it was asked to report.
+    if status["points"] == 0:
+        text += (
+            " Индекс пуст — поиск ничего не найдёт, пока не проиндексирован хотя бы один PDF: "
+            "cd rag-service && .venv/bin/python scripts/index_pdf.py <файл.pdf> --reset"
+        )
+    return CallToolResult(content=[TextContent(type="text", text=text)], structured_content=status)
+
+
+def _store(mode: str) -> str:
+    """Keep the store kind and the folder name; drop the absolute local path.
+
+    rag-service reports `embedded (<absolute path>)`, which carries a home directory and folder
+    names into whatever an agent shows the user. A container URL describes a setup, not a disk,
+    and is kept as-is. rag-eval had to make the same redaction in its published results.
+    """
+    kind, _, detail = mode.partition(" (")
+    detail = detail.rstrip(")")
+    if not detail or "://" in detail:
+        return mode
+    return f"{kind} ({detail.rstrip('/').rsplit('/', 1)[-1]})"
+
+
+def _service_down(exc: rag_client.ServiceUnavailable) -> ToolError:
+    """One wording for "rag-service is not answering", shared by every tool so they cannot drift.
+
+    Raised deliberately as a ToolError: an ordinary exception reaches the agent with its text
+    withheld, and the agent would improvise an answer as if nothing were wrong.
+    """
+    return ToolError(
+        f"rag-service не отвечает по адресу {exc.url} ({exc.cause}). Ответа из документов нет — "
+        f"не отвечайте по памяти. Запустите сервис: {rag_client.START_COMMAND}"
+    )
