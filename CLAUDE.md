@@ -124,7 +124,8 @@ Sessions 1 and 2 of 4 are done. `ping`, and `search_documents` over HTTP with th
 distinct (hits with a weak-match flag below `WEAK_MATCH = 0.5` · nothing matched is a normal result ·
 empty index is a `ToolError` · service down is a `ToolError` naming the URL and the start command),
 the socket guard, and real `/health` + `/ask` fixtures from `rag_eval_1200`. Session 3 has
-started: `index_status` is done. 21 tests.
+continued on 21 Oct: CI is green on 3.11 + 3.12 and the README skeleton is in. 21 tests.
+The repo is on GitHub, **private**: `wanchiko-studio/agent-tools-mcp`.
 
 ## Where session 2 stopped (19 Oct, 11:41 MSK)
 
@@ -152,16 +153,36 @@ count from `/health`; an empty index is a plain report naming `scripts/index_pdf
 `search_documents`, now built by one shared `_service_down()` so the two cannot drift. The store's
 absolute local path is cut to its folder name (`embedded (qdrant_storage)`); a container URL is kept.
 
-**What session 3 still needs, in order:**
+**Session 3, 21 Oct (09:10–10:20 MSK) — done:**
 
-1. **CI** — GitHub Actions on 3.11 + 3.12, mirroring `../rag-service/.github/workflows/ci.yml`
-   without its compose step. Bare `pytest`; the socket guard must hold on the runner.
-2. **README** — the problem in the first two lines; a worked example with real output (the Claude
-   Code session, the tool call, the passage, the cited page) **and** the failure case: rag-service
-   stopped → the agent says the service is down instead of inventing an answer.
-3. **Decide the structured-JSON-vs-readable-text finding** (point 1 above): Claude Code passed the
-   model the `structured_content`, not the Russian text block. The README must quote what the model
+- `c7363b2` Ignore the local .claude folder
+- `9ca773f` Run the tests on GitHub Actions for Python 3.11 and 3.12 — first run green on both,
+  21 passed each; the socket guard held on Ubuntu unchanged
+- Repo created on GitHub as **private**, `main` pushed (`gh repo create … --private`)
+- `8da7ff4` Add a README with placeholders for the live worked example — tools, requirements,
+  install/run, `.mcp.json`, tests, CI badge; the two output sections are marked placeholders
+
+Two environment traps found today:
+
+1. **The folder rename broke bare `pytest` locally.** pip launchers in `.venv/bin/` hard-code the
+   absolute interpreter path, and the folder moved from `03 — Demos & Builds` to `02 — Demos & Builds`.
+   Fixed by `pip install --force-reinstall --no-deps pytest==9.1.1`. Other launchers in `.venv/bin/`
+   (e.g. `mcp`'s CLI) are still stale but unused; `.venv/bin/python` itself is fine.
+2. **Claude Code's shell sandbox blocks `pypi.org` and `github.com`** (only `api.github.com` passes),
+   so pip installs, `git push` and `gh run watch` must run outside the sandbox.
+
+**What is left, in order:**
+
+1. **README worked example** — capture from a real live Claude Code session (launched from this
+   folder, rag-service running on `rag_eval_1200`): the question, the `search_documents` call, the
+   passage, the answer citing the page. Replace the placeholder with it verbatim.
+2. **README failure case** — the same with rag-service stopped: the agent receives the "service is
+   down" tool error and says so instead of answering from memory. Replace the second placeholder.
+3. **Decide the structured-JSON-vs-readable-text finding**: Claude Code passed the model the
+   `structured_content`, not the Russian text block. The worked example must quote what the model
    actually saw; whether the text block still earns its place is a decision, not an assumption.
 4. **Clean-clone check** — clone into `/tmp`, follow only the README, `pytest` green.
+5. **Session 4** — make the repo public, set topics (`mcp`, `model-context-protocol`, `rag`,
+   `claude-code`, `qdrant`, `fastapi`, `python`), confirm the badge renders green.
 
 First command: `cd "02 — Demos & Builds/30-Day-Build-Plan/agent-tools-mcp" && .venv/bin/python -m pytest`
