@@ -196,7 +196,7 @@ Two things to know from today:
 
 **What is left, in order:**
 
-1. **Clean-clone check** — clone into `/tmp`, follow only the README, `pytest` green.
+1. ~~**Clean-clone check**~~ — done 23 Oct (`3d1c6d2`): a fresh `/tmp` clone, following only the README, gives 21 passed. Fixed on the way: clone line, `.venv/bin/pytest`, where Python comes from, rag-service cloned into the same parent folder and how to index a PDF.
 2. **Session 4** — make the repo public, set topics (`mcp`, `model-context-protocol`, `rag`,
    `claude-code`, `qdrant`, `fastapi`, `python`), confirm the badge renders green.
 
