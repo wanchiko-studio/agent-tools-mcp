@@ -99,10 +99,33 @@ address, set `RAG_SERVICE_URL` in the `env` block.
 
 ## Worked example
 
-> **PLACEHOLDER — to be filled from a real, live Claude Code session, not written by hand.**
-> It will show: the question asked, the `search_documents` call the agent made, the passage that came
-> back, and the answer citing the page — quoted as the session produced it, on the public petroleum
-> engineering paper that `rag-eval` uses.
+Captured from a live Claude Code session on 23 Oct 2026, run headless from this folder with only
+this server attached, against the public petroleum engineering paper that `rag-eval` uses. Nothing
+below was written or tidied by hand; long passage text is cut with […], and the lost spaces are the
+PDF extractor's, as the model received them.
+
+**The question**
+
+> What program was used to model proppant migration?
+
+**The tool call the agent made**
+
+```json
+{"question": "What program was used to model proppant migration?", "top_k": 3}
+```
+
+**What the model received** — Claude Code hands the model the tool's `structured_content`, so this
+JSON is what it read (passage text cut with […]):
+
+```json
+{"question":"What program was used to model proppant migration?","hits":[{"rank":1,"score":0.3634566816076189,"citation":"petroleum-science-2022-self-generated-proppant.pdf, стр. 8","text":"[…]3.2.2. Simulationofproppantmigration (3) Initialandboundaryconditions\nCOMSOLVersion5.5wasusedtoestablishamodelforsimula-\ntionofproppantmigrationtoevaluatethemigrationcapabilityof ThemodelboundaryfollowsDirichletconditions.Leftandright\ntheself-generatedproppantwithinarealfracture.[…]","weak_match":true},{"rank":2,"score":0.3451660657685419,"citation":"petroleum-science-2022-self-generated-proppant.pdf, стр. 9","text":"[…]","weak_match":true},{"rank":3,"score":0.2647139167439335,"citation":"petroleum-science-2022-self-generated-proppant.pdf, стр. 1","text":"[…]","weak_match":true}]}
+```
+
+**The answer**
+
+> **COMSOL (Version 5.5)** was used to model proppant migration — specifically to simulate the migration capability of the self-generated proppant within a real fracture (`petroleum-science-2022-self-generated-proppant.pdf, стр. 8`).
+>
+> Note: all three passages came back flagged as weak matches (top score 0.36, below the 0.5 line), but passage 1 does state the answer directly.
 
 ## When rag-service is down
 
