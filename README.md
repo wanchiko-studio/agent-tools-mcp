@@ -39,17 +39,25 @@ readable text is what other MCP clients show. A tool error reaches the model as 
 
 ## Requirements
 
-- **rag-service running**, with at least one document indexed. This server talks to it over HTTP
-  only (`POST /ask`, `GET /health`) and never imports its code.
-- **Python 3.11 or 3.12** — the versions CI runs.
+- **[rag-service](https://github.com/wanchiko-studio/rag-service) running**, with at least one PDF
+  indexed. It is a separate repository: clone it into the **same parent folder** as this one (the run
+  command below does `cd ../rag-service`) and follow its Quick start. Until a PDF is indexed,
+  `search_documents` reports an empty index. To index one, from rag-service's folder:
+  `.venv/bin/python scripts/index_pdf.py <file.pdf> --reset`. This server talks to it over HTTP only
+  (`POST /ask`, `GET /health`) and never imports its code.
+- **Python 3.11 or 3.12** — the versions CI runs. On macOS: `brew install python@3.12`.
 - An MCP client. The instructions below are for Claude Code.
 
 ## Install
 
 ```bash
+git clone https://github.com/wanchiko-studio/agent-tools-mcp.git
+cd agent-tools-mcp
 python3.12 -m venv .venv
 .venv/bin/pip install -r requirements.txt -r requirements-dev.txt
 ```
+
+With Python 3.11, use `python3.11` in the third line.
 
 Dependencies are pinned: `mcp` 2.2.0 (the 2.x SDK, `MCPServer`), `httpx` 0.28.1, `pytest` 9.1.1.
 
@@ -167,7 +175,7 @@ paragraph, an aside about this repository's own to-do list, is cut with […]:
 ## Tests
 
 ```bash
-pytest
+.venv/bin/pytest
 ```
 
 21 tests, with **no API key, no network and no rag-service**. Every tool is called through the MCP
