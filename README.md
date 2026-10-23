@@ -129,9 +129,35 @@ JSON is what it read (passage text cut with […]):
 
 ## When rag-service is down
 
-> **PLACEHOLDER — to be filled from a real session with rag-service stopped.**
-> It will show the agent receiving the "rag-service is not answering" tool error and telling the user
-> the service is down, instead of answering from memory.
+Captured from a live Claude Code session on 23 Oct 2026, same question, same command, with
+rag-service stopped (port 8000 refusing connections). Nothing below was written or tidied by hand.
+
+**The tool call the agent made**
+
+```json
+{"question": "What program was used to model proppant migration?"}
+```
+
+**The tool error the model received**
+
+```
+Error executing tool search_documents: rag-service не отвечает по адресу http://127.0.0.1:8000 (connection failed (ConnectError)). Ответа из документов нет — не отвечайте по памяти. Запустите сервис: cd rag-service && .venv/bin/python -m uvicorn app.api:app
+```
+
+**The agent's reply** — it reports the service as down and does not answer from memory. Its closing
+paragraph, an aside about this repository's own to-do list, is cut with […]:
+
+> The `search_documents` tool returned a service-down error — rag-service isn't running at `http://127.0.0.1:8000`, so I have no indexed passages to cite. I won't answer from memory.
+>
+> To get the answer, start rag-service in another terminal:
+>
+> ```
+> cd ../rag-service && .venv/bin/python -m uvicorn app.api:app
+> ```
+>
+> Then re-ask the question and I'll call `search_documents` again.
+>
+> […]
 
 ## Tests
 
