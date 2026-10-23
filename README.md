@@ -32,6 +32,11 @@ went wrong. Each of the three reaches the agent as a distinct, tested outcome.
 The weak-match line is rag-service's own (documented in its `app/api.py` and `scripts/ask.py`). It is
 a fixed constant here, not a tuning knob.
 
+**What the model actually reads depends on the client.** Each successful call returns two things: a
+readable text block (in Russian) and the same passages as `structured_content`. In the live Claude Code
+sessions below, Claude Code handed the model the `structured_content` JSON, not the text block — so the
+readable text is what other MCP clients show. A tool error reaches the model as its message text.
+
 ## Requirements
 
 - **rag-service running**, with at least one document indexed. This server talks to it over HTTP
