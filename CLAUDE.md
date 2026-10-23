@@ -124,7 +124,8 @@ Sessions 1 and 2 of 4 are done. `ping`, and `search_documents` over HTTP with th
 distinct (hits with a weak-match flag below `WEAK_MATCH = 0.5` · nothing matched is a normal result ·
 empty index is a `ToolError` · service down is a `ToolError` naming the URL and the start command),
 the socket guard, and real `/health` + `/ask` fixtures from `rag_eval_1200`. Session 3 has
-continued on 21 Oct: CI is green on 3.11 + 3.12 and the README skeleton is in. 21 tests.
+continued on 21 and 23 Oct: CI is green on 3.11 + 3.12, and the README carries a real worked
+example and a real service-down case from live sessions. 21 tests.
 The repo is on GitHub, **private**: `wanchiko-studio/agent-tools-mcp`.
 
 ## Where session 2 stopped (19 Oct, 11:41 MSK)
@@ -171,18 +172,32 @@ Two environment traps found today:
 2. **Claude Code's shell sandbox blocks `pypi.org` and `github.com`** (only `api.github.com` passes),
    so pip installs, `git push` and `gh run watch` must run outside the sandbox.
 
+**Session 3, 23 Oct (09:30–09:45 MSK) — items 1–3 done:**
+
+- ✅ `b5d54eb` Fill the README worked example from a live session — question, tool call, the
+  `structured_content` the model received (passage verbatim, cut with […]), the answer citing стр. 8
+- ✅ `cdc22f3` Show the service-down case from a live session — rag-service stopped, port 8000 refusing;
+  the agent got the `ConnectError` ToolError and said it would not answer from memory
+- ✅ `e2fc6ba` Say which part of the tool result Claude Code hands the model — documented as observed
+  (structured JSON to the model, readable text for other clients). No code change.
+
+Two things to know from today:
+
+1. **A second real failure case exists, outside the README.** The first worked-example run timed out:
+   the agent's `/ask` set off rag-service's ~241 MB model download (19 s), our 10 s timeout fired, and
+   the agent got `rag-service не отвечает … (no answer within 10 s)` and refused to answer from memory.
+   Saved as `/tmp/atm-worked-timeout.jsonl` (macOS clears `/tmp`). Warm the service with one `curl`
+   to `/ask` before any capture.
+2. **This file contains the answer to the demo question** («COMSOL (Version 5.5) … стр. 8»), and a
+   headless `claude -p` run from inside this folder reads it — the agent said "prior session notes
+   record the answer". So a reproduction from inside the repo is **not a blind test**. Today's answer was
+   checked against the tool result (wording and page both come from the rank-1 passage). A blind run needs
+   a question these notes do not answer, or a session that does not load this file.
+
 **What is left, in order:**
 
-1. **README worked example** — capture from a real live Claude Code session (launched from this
-   folder, rag-service running on `rag_eval_1200`): the question, the `search_documents` call, the
-   passage, the answer citing the page. Replace the placeholder with it verbatim.
-2. **README failure case** — the same with rag-service stopped: the agent receives the "service is
-   down" tool error and says so instead of answering from memory. Replace the second placeholder.
-3. **Decide the structured-JSON-vs-readable-text finding**: Claude Code passed the model the
-   `structured_content`, not the Russian text block. The worked example must quote what the model
-   actually saw; whether the text block still earns its place is a decision, not an assumption.
-4. **Clean-clone check** — clone into `/tmp`, follow only the README, `pytest` green.
-5. **Session 4** — make the repo public, set topics (`mcp`, `model-context-protocol`, `rag`,
+1. **Clean-clone check** — clone into `/tmp`, follow only the README, `pytest` green.
+2. **Session 4** — make the repo public, set topics (`mcp`, `model-context-protocol`, `rag`,
    `claude-code`, `qdrant`, `fastapi`, `python`), confirm the badge renders green.
 
 First command: `cd "02 — Demos & Builds/30-Day-Build-Plan/agent-tools-mcp" && .venv/bin/python -m pytest`
